@@ -1,14 +1,24 @@
 import { Link } from 'react-router-dom';
-import React, { useState } from 'react';
-import { Navbar, Nav } from "react-bootstrap";
+import React, { useState, useContext } from 'react';
+import { Navbar, Nav, Button } from "react-bootstrap";
 
-
+import { useHistory } from "react-router-dom";
+import Cookies from "js-cookie";
+import UserContext from "../../context/UserContext";
 
 const UberNavbar = () => {
+    const { setIsAuthenticated } = useContext(UserContext);
     //state to update the selection on navbar
     const [current, setCurrent] = useState('Home');
+    const history = useHistory();
+    const logout = (e) => {
+        e.preventDefault();
+        Cookies.remove("jwt");
+        setIsAuthenticated(false);
+        history.push("/login");
+    }
     return (
-        <Navbar className="bg-dark" variant='dark' expand="lg">
+        <Navbar className="bg-dark px-0" variant='dark' expand="lg">
             <Navbar.Brand as={Link} to="/" onClick={(e) => { setCurrent("home") }}>Uber</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
@@ -17,8 +27,8 @@ const UberNavbar = () => {
                     <Nav.Link as={Link} eventKey="rides" to="/rides" className="btn">Rides</Nav.Link>
                     <Nav.Link as={Link} eventKey="testHealth" to="/testHealth" className="btn">Test Health</Nav.Link>
                     <Nav.Link as={Link} eventKey="testComms" to="/testComms" className="btn">Test Comms</Nav.Link>
-                    <Nav.Link as={Link} eventKey="logout" to="/logout" className="btn ml-auto">Logout</Nav.Link>
                 </Nav>
+                <Button onClick={logout} className="btn-light ml-auto">Logout</Button>
             </Navbar.Collapse>
         </Navbar>
     );

@@ -27,18 +27,31 @@
 .App-link {
   color: #61dafb;
 }
-.dropdown-location{
+
+.dropdown-location {
   position: absolute;
-  top:100%;
+  top: 100%;
   z-index: 1;
 }
-.main-div{
+
+.main-div {
   height: calc(100vh - 8rem);
 }
+
+.login-div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

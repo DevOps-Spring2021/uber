@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import AutoComplete from "../AutoComplete/AutoComplete";
 import Maps from "../Maps/Maps";
 import axios from "axios";
+import Cookies from "js-cookie";
 const { Backend_HOST } = process.env;
 const BookRide = () => {
 
@@ -10,15 +11,27 @@ const BookRide = () => {
     const [destination, setDestination] = useState('');
     const [showDirection, setShowDirection] = useState(null);
     const [showMarker, setShowMarker] = useState(null);
+    const [userDisplay, setUserDisplay] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
         //TODO:make api call to backend & redirect to ride details
     }
+
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_BACKEND_HOST}/v1/users/`, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get("jwt")}`
+            }
+        })
+            .then(res => {debugger; setUserDisplay(res.data.firstName + " " + res.data.lastName)})
+            .catch(err => console.log(err));
+    }
+        , [])
     const getLatLng = async (id) => {
-        let url = `${process.env.REACT_APP_BAKCEND_HOST}/maps/place_id/${id}`;
+        let url = `${process.env.REACT_APP_BACKEND_HOST}/maps/place_id/${id}`;
         let resp = await axios.get(url, {
             headers: {
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGIuY29tIiwiZXhwIjoxNjE2MjcxNTczLCJpYXQiOjE2MTYyNTM1NzN9.86VmjMBZdg2V3vmGJtHEISPUXt2ggOJ_-u3Z2n9tjoA201KLlMLjLJENCYexOY_XcSDd_bXQsY-Bv9nYXXeIYA"
+                Authorization: `Bearer ${Cookies.get("jwt")}`
             }
         });
         return resp.data.result.geometry.location;
@@ -69,7 +82,8 @@ const BookRide = () => {
         <div className="row main-div mt-5">
             <div className="col-4 d-flex align-items-center">
                 <Form onSubmit={handleSubmit}>
-                    <h3>Hi, please book your ride</h3>
+                    <h3>Hi, {userDisplay}</h3>
+                    <h5>Please book your ride</h5>
                     <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
                     <AutoComplete label="Enter destination" onSelect={destinationChange}></AutoComplete>
                     <Button type="submit" className="bg-dark w-100">Book Ride</Button>
