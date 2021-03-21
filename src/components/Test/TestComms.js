@@ -5,7 +5,7 @@ const TestComms = () => {
     const [message, setMessage] = useState('Making Backend API Call');
     useEffect(
         () => {
-            axios.get(`${process.env.REACT_APP_BAKCEND_HOST}/testHealth`)
+            axios.get(`${process.env.REACT_APP_BACKEND_HOST}/testHealth`)
                 .then(resp => setMessage(resp.data))
                 .catch(err => setMessage("Error connecting backend"));
         }

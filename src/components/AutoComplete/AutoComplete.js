@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, ListGroup } from "react-bootstrap";
 import axios from 'axios';
+import Cookies from "js-cookie";
 const AutoComplete = ({ label, onSelect }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchList, setSearchList] = useState([]);
@@ -14,10 +15,10 @@ const AutoComplete = ({ label, onSelect }) => {
         }
         const timer = setTimeout(async () => {
             if (e.target.value) {
-                let url = `${process.env.REACT_APP_BAKCEND_HOST}/maps/${e.target.value}`;
+                let url = `${process.env.REACT_APP_BACKEND_HOST}/maps/${e.target.value}`;
                 let resp = await axios.get(url, {
                     headers: {
-                        Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGIuY29tIiwiZXhwIjoxNjE2MjcxNTczLCJpYXQiOjE2MTYyNTM1NzN9.86VmjMBZdg2V3vmGJtHEISPUXt2ggOJ_-u3Z2n9tjoA201KLlMLjLJENCYexOY_XcSDd_bXQsY-Bv9nYXXeIYA"
+                        Authorization: `Bearer ${Cookies.get("jwt")}`
                     }
                 });
                 setSearchList(resp?.data?.predictions?.map(pred => ({ name: pred.description, place_id: pred.place_id })).slice(0, 5) || [])
