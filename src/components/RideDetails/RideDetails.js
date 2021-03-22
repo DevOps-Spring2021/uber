@@ -92,13 +92,13 @@ const RideDetails = (props) => {
                                 <td>Ride Date:</td>
                                 <td>{rideData.rideDate.split("T")[0]}</td>
                             </tr>
-                            {rideData.cancel ?
-                                <tr>
-                                    <td colSpan="2">Ride Canceled</td>
-                                </tr> :
-                                <></>}
                         </tbody>
                     </Table>
+                    {rideData.cancel ?
+                        <div className="bg-light p-2">
+                            Ride Canceled
+                        </div> :
+                        <></>}
                     {!rideData.cancel && ((new Date(rideData.rideDate)).getTime()) > (new Date()).getTime() ?
                         <div>
                             <Button onClick={cancelRide} className="btn btn-dark">Cancel Ride</Button>
@@ -106,7 +106,7 @@ const RideDetails = (props) => {
                         : <></>}
                     {!rideData.cancel && ((new Date(rideData.rideDate)).getTime()) < (new Date()).getTime() ?
                         <div>
-                            {rideData.feedback == "" ?
+                            {!rideData.feedback || rideData.feedback == "" ?
                                 <div>
                                     <Form.Group controlId="exampleForm.ControlTextarea1">
                                         <Form.Label>Feedback</Form.Label>
