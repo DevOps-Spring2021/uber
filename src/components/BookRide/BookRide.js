@@ -4,17 +4,31 @@ import AutoComplete from "../AutoComplete/AutoComplete";
 import Maps from "../Maps/Maps";
 import axios from "axios";
 import Cookies from "js-cookie";
-const { Backend_HOST } = process.env;
+import { useHistory } from "react-router-dom";
 const BookRide = () => {
-
+    const history = useHistory();
     const [source, setSource] = useState('');
     const [destination, setDestination] = useState('');
     const [showDirection, setShowDirection] = useState(null);
     const [showMarker, setShowMarker] = useState(null);
     const [userDisplay, setUserDisplay] = useState('');
+    const [rideDate, setRideDate] = useState(new Date());
+    const [schedule, setSchedule] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault();
-        //TODO:make api call to backend & redirect to ride details
+        axios.post(`${process.env.REACT_APP_BACKEND_HOST}/rides/book`, {
+            pickup: source.name,
+            destination: destination.name,
+            pickupPlaceId: source.place_id,
+            destinationPlaceId: destination.place_id,
+            rideDate: rideDate
+        }, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get("jwt")}`
+            },
+        })
+            .then(res => { history.push(`/rides/${res.data.rideID}`) })
+            .catch(err => alert("error while booking ride"));
     }
 
     useEffect(() => {
@@ -23,7 +37,7 @@ const BookRide = () => {
                 Authorization: `Bearer ${Cookies.get("jwt")}`
             }
         })
-            .then(res => {debugger; setUserDisplay(res.data.firstName + " " + res.data.lastName)})
+            .then(res => { setUserDisplay(res.data.firstName + " " + res.data.lastName) })
             .catch(err => console.log(err));
     }
         , [])
@@ -86,7 +100,19 @@ const BookRide = () => {
                     <h5>Please book your ride</h5>
                     <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
                     <AutoComplete label="Enter destination" onSelect={destinationChange}></AutoComplete>
-                    <Button type="submit" className="bg-dark w-100">Book Ride</Button>
+                    <Form.Group controlId="formBasicCheckbox">
+                        <Form.Check onChange={(e) => { e.target.checked ? setSchedule(true) : setSchedule(false) }} type="checkbox" label="Schedule Ride?" />
+                    </Form.Group>
+                    {schedule && <Form.Group>
+                        <Form.Control
+                            type="date"
+                            value={rideDate}
+                            onChange={(e) => { setRideDate(e.target.value) }}
+                        />
+                    </Form.Group>}
+                    <div>
+                        <Button type="submit" className="bg-dark w-50">Book Ride</Button>
+                    </div>
                 </Form>
             </div>
             <div className="col-8">
