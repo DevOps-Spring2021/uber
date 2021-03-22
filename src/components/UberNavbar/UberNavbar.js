@@ -9,7 +9,7 @@ import UserContext from "../../context/UserContext";
 const UberNavbar = () => {
     const { setIsAuthenticated } = useContext(UserContext);
     //state to update the selection on navbar
-    const [current, setCurrent] = useState('Home');
+    const [current, setCurrent] = useState('Book Ride');
     const history = useHistory();
     const logout = (e) => {
         e.preventDefault();
@@ -23,10 +23,8 @@ const UberNavbar = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="d-flex w-100" activeKey={current} onSelect={(e) => { setCurrent(e.eventKey) }}>
-                    <Nav.Link as={Link} eventKey="home" to="/" className="btn">Home</Nav.Link>
+                    <Nav.Link as={Link} eventKey="Book Ride" to="/" className="btn">Home</Nav.Link>
                     <Nav.Link as={Link} eventKey="rides" to="/rides" className="btn">Rides</Nav.Link>
-                    <Nav.Link as={Link} eventKey="testHealth" to="/testHealth" className="btn">Test Health</Nav.Link>
-                    <Nav.Link as={Link} eventKey="testComms" to="/testComms" className="btn">Test Comms</Nav.Link>
                 </Nav>
                 <Button onClick={logout} className="btn-light ml-auto">Logout</Button>
             </Navbar.Collapse>
