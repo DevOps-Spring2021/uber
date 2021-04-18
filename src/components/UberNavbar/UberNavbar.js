@@ -25,6 +25,7 @@ const UberNavbar = () => {
                 <Nav className="d-flex w-100" activeKey={current} onSelect={(e) => { setCurrent(e.eventKey) }}>
                     <Nav.Link as={Link} eventKey="Book Ride" to="/" className="btn">Home</Nav.Link>
                     <Nav.Link as={Link} eventKey="rides" to="/rides" className="btn">Rides</Nav.Link>
+                    <Nav.Link as={Link} eventKey="buses" to="/buses" className="btn">Admin</Nav.Link>
                 </Nav>
                 <Button onClick={logout} className="btn-light ml-auto">Logout</Button>
             </Navbar.Collapse>

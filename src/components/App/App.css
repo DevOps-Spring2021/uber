@@ -47,6 +47,32 @@
   transform: translate(-50%, -50%);
 }
 
+.bg-white {
+  background-color: white;
+}
+
+@media screen and (max-width: 992px) {
+  .login-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media screen and (max-width:600px) {
+  .login-div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -55,4 +81,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.pointer {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+.my-comment-dropdown{
+  height: 100%;
+  width: 100%;
+}
+.dropdown-toggle{
+  width: 100%;
+}
+.dropdown-menu {
+  width: 100%;
+  z-index: 2;
 }
