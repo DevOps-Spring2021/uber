@@ -125,7 +125,7 @@ const RideDetails = (props) => {
                 </div>
                 <div className="col-8">
                     <Maps
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBkVS8RGY7sRZlk5LBh3-UprOGVKOVvi-w&v=3.exp&libraries=geometry,drawing,places,directions"
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2HFlhQEag0ziQjl7LULqobeCEmInPAX0&v=3.exp&libraries=geometry,drawing,places,directions"
                         loadingElement={<div style={{ height: `100%` }} />}
                         containerElement={<div style={{ height: `calc(100vh - 8.0rem)` }} />}
                         mapElement={<div style={{ height: `100%` }} />}

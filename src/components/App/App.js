@@ -9,6 +9,7 @@ import RideDetails from '../RideDetails/RideDetails';
 import TestHealth from "../Test/TestHealth";
 import TestComms from "../Test/TestComms";
 import Login from '../Login/Login';
+import Buses from '../Buses/Buses';
 import React, { useState } from "react";
 import UserContext from "../../context/UserContext";
 import Cookie from "js-cookie";
@@ -31,6 +32,7 @@ function App() {
                   <Route path="/login" component={Login}></Route>
                   <Route path="/rides/:id" component={RideDetails}></Route>
                   <Route path="/rides" component={Rides}></Route>
+                  <Route path="/buses" component={Buses}></Route>
                   <Route path="/testHealth" component={TestHealth}></Route>
                   <Route path="/testComms" component={TestComms}></Route>
                 </Switch>
