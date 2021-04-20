@@ -10,6 +10,7 @@ const Buses = () => {
     const [destination, setDestination] = useState('');
     const [seats, setSeats] = useState('');
     const [busId, setBusId] = useState('');
+    const [busName, setBusName] = useState('');
     const [showInfo, setShowInfo] = useState(false);
     const [showError, setShowError] = useState(false);
     const [lstBus, setLstBus] = useState([]);
@@ -31,19 +32,20 @@ const Buses = () => {
     }
     const addBus = (e) => {
         e.preventDefault();
-        if (source !== '' && destination !== '' && seats != '') {
+        if (source !== '' && destination !== '' && seats !== '') {
             axios.post(`${process.env.REACT_APP_BACKEND_HOST}/bus/`, {
                 source: source.name,
                 destination: destination.name,
                 sourceId: source.place_id,
                 destinationId: destination.place_id,
+                busName: busName,
                 totalSeats: parseInt(seats)
             }, {
                 headers: {
                     Authorization: `Bearer ${Cookies.get("jwt")}`
                 },
             })
-                .then(res => { setShowInfo(true); setSeats("") })
+                .then(res => { console.log("Bus added successfully"); setShowInfo(true); setSeats("") })
                 .catch(err => setShowError(true));
         }
     }
@@ -53,6 +55,7 @@ const Buses = () => {
                 return (
                     <tr key={bus.busID}>
                         <td>{bus.busID}</td>
+                        <td>{bus.busName}</td>
                         <td>{bus.source}</td>
                         <td>{bus.destination}</td>
                         <td>{bus.totalSeats}</td>
@@ -69,7 +72,7 @@ const Buses = () => {
                     Authorization: `Bearer ${Cookies.get("jwt")}`
                 },
             })
-                .then(res => { setShowInfo(true); setBusId("") })
+                .then(res => { console.log("Bus removed successfully"); setShowInfo(true); setBusId("") })
                 .catch(err => setShowError(true));
         }
     }
@@ -105,6 +108,7 @@ const Buses = () => {
                             <thead>
                                 <tr>
                                     <th>Bus ID</th>
+                                    <th>Bus Name</th>
                                     <th>Pick up</th>
                                     <th>Destination</th>
                                     <th>Seats</th>
@@ -122,11 +126,20 @@ const Buses = () => {
                                     <Form.Group controlId="source">
                                         <label>Source</label>
                                         <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
-                                    </Form.Group><Form.Group controlId="source">
+                                    </Form.Group>
+                                    <Form.Group controlId="destination">
                                         <label>Destination</label>
                                         <AutoComplete label="Enter destination" onSelect={destinationChange}></AutoComplete>
                                     </Form.Group>
-                                    <Form.Group controlId="source">
+                                    <Form.Group controlId="busName">
+                                        <label>Bus Name</label>
+                                        <Form.Control
+                                            type="text"
+                                            value={busName}
+                                            onChange={(e) => { setBusName(e.target.value) }}
+                                            required />
+                                    </Form.Group>
+                                    <Form.Group controlId="seats">
                                         <label>Seats</label>
                                         <Form.Control
                                             type="number"
@@ -144,7 +157,7 @@ const Buses = () => {
                             <Form onSubmit={removeBus}>
                                 <div>
                                     <Form.Group controlId="source">
-                                        <label>Enter Bs Id to be removed</label>
+                                        <label>Enter Bus Id to be removed</label>
                                         <Form.Control
                                             type="number"
                                             value={busId}

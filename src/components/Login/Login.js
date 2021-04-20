@@ -43,9 +43,10 @@ const Login = () => {
                     password: password,
                     username: username
                 })
-                    .then(resp => { setShowInfo(true); reset(); history.push("/login") })
+                    .then(resp => { setShowInfo(true); reset(); history.push("/login"); console.log("User created.") })
                     .catch((err) => {
                         setValidated(false);
+                        console.log("Error while creating user")
                         err.response.data ? setErrorMessage(err.response.data) : setErrorMessage("error while creating user");
                         setShowError(true);
                     });
@@ -56,7 +57,17 @@ const Login = () => {
                     password: password,
                     username: username
                 })
-                    .then(res => { Cookies.set('jwt', res.data.token); setIsAuthenticated(true); history.push("/") })
+                    .then(res => { 
+                        Cookies.set('jwt', res.data.token); 
+                        console.log("Login Successful!!!")
+                        setIsAuthenticated(true); 
+                        if(username ==="admin@uberbus.com"){
+                            history.push("/buses")
+                        }
+                        else {
+                            history.push("/");
+                        }
+                    })
                     .catch(err => { setErrorMessage("Please enter valid credentials"); setShowError(true) });
             }
         }
