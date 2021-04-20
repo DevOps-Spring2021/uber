@@ -12,12 +12,12 @@ const BookRide = () => {
     const [showDirection, setShowDirection] = useState(null);
     const [showMarker, setShowMarker] = useState(null);
     const [userDisplay, setUserDisplay] = useState('');
-    const [rideDate, setRideDate] = useState(new Date());
+    const [rideDate, setRideDate] = useState(`${(new Date()).getFullYear()}-0${(new Date()).getMonth() + 1}-${(new Date()).getDate()}`);
     const [seats, setSeats] = useState(1);
+    const [price, setPrice] = useState(0);
     const [busId, setBusID] = useState('');
     const [lstBus, setLstBus] = useState([]);
     const handleSubmit = (e) => {
-        debugger
         e.preventDefault();
         axios.post(`${process.env.REACT_APP_BACKEND_HOST}/rides/book`, {
             pickup: source.name,
@@ -26,13 +26,14 @@ const BookRide = () => {
             destinationPlaceId: destination.place_id,
             rideDate: rideDate,
             busId: busId,
+            cost: price,
             seats: seats
         }, {
             headers: {
                 Authorization: `Bearer ${Cookies.get("jwt")}`
             },
         })
-            .then(res => { history.push(`/rides/${res.data.rideID}`) })
+            .then(res => { console.log("Ride booked Successfully.");  history.push(`/rides/${res.data.rideID}`) })
             .catch(err => alert("error while booking ride"));
     }
 
@@ -46,18 +47,19 @@ const BookRide = () => {
             .catch(err => console.log(err));
     }
         , [])
-
-    useEffect(()=>{
-        getBusList();
-    }, [source, destination, seats]);
-    const getLatLng = async (id) => {
-        let url = `${process.env.REACT_APP_BACKEND_HOST}/maps/place_id/${id}`;
-        let resp = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${Cookies.get("jwt")}`
-            }
-        });
-        return resp.data.result.geometry.location;
+    const getPrice = () => {
+        if (source.place_id && destination.place_id) {
+            axios.post(`${process.env.REACT_APP_BACKEND_HOST}/maps/distance`, {
+                sourceId: source.place_id,
+                destinationId: destination.place_id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${Cookies.get("jwt")}`
+                },
+            })
+                .then(res => setPrice(Math.round(seats * 10 * (parseFloat(res.data.rows[0].elements[0].distance.value / 1000))) / 100))
+                .catch(err => console.log(err));
+        }
     }
     const getBusList = () => {
         axios.get(`${process.env.REACT_APP_BACKEND_HOST}/bus/getAvailability?source=${source.place_id}&&destination=${destination.place_id}`, {
@@ -76,6 +78,19 @@ const BookRide = () => {
             })
             .catch(err => alert("error while booking ride"));
     }
+    useEffect(()=>{
+        getPrice();
+        getBusList();
+    }, [source, destination, seats]);
+    const getLatLng = async (id) => {
+        let url = `${process.env.REACT_APP_BACKEND_HOST}/maps/place_id/${id}`;
+        let resp = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${Cookies.get("jwt")}`
+            }
+        });
+        return resp.data.result.geometry.location;
+    }
     const sourceChange = async (data) => {
         setSource(data);
         updateMap("src", data);
@@ -86,7 +101,7 @@ const BookRide = () => {
         updateMap("dest", data);
     }
     const updateMap = async (type, data) => {
-        if (type == "src") {
+        if (type === "src") {
             if (destination) {
                 let srcCoords = await getLatLng(data.place_id);
                 let dstCoords = await getLatLng(destination.place_id);
@@ -99,7 +114,7 @@ const BookRide = () => {
                 setShowDirection(null);
             }
         }
-        else if (type == "dest") {
+        else if (type === "dest") {
             if (source) {
                 let dstCoords = await getLatLng(data.place_id);
                 let srcCoords = await getLatLng(source.place_id);
@@ -122,15 +137,15 @@ const BookRide = () => {
         return (
             [...lstBus].map(bus => {
                 return (
-                    <Dropdown.Item className="w-100" key={bus.busID} onClick={() => { setBusID(bus.busID) }}>Bus No. {bus.busID}</Dropdown.Item>
+                    <Dropdown.Item className="w-100" key={bus.busID} onClick={() => { setBusID(bus.busID) }}>{bus.busName}: Bus No{bus.busID}</Dropdown.Item>
                 )
             })
         )
     }
     return (
         <div className="row main-div mt-5">
-            <div className="col-4 d-flex align-items-center">
-                <Form onSubmit={handleSubmit}>
+            <div className="col-12 col-md-4 d-flex align-items-center mb-3">
+                <Form onSubmit={handleSubmit} className="w-100">
                     <h3>Hi, {userDisplay}</h3>
                     <h5>Please book your ride</h5>
                     <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
@@ -147,9 +162,14 @@ const BookRide = () => {
                         <Form.Control
                             type="number"
                             value={seats}
-                            onChange={(e) => { setSeats(e.target.value); getBusList(); }}
+                            min="1"
+                            onChange={(e) => { setSeats(e.target.value)}}
                             placeholder="Number of seats"
                             required />
+                    </Form.Group>
+                    <Form.Group>
+                        <label>Price: </label>
+                        <b>${price}</b>
                     </Form.Group>
                     {lstBus.length > 0 && (
                         <DropdownButton
@@ -170,7 +190,7 @@ const BookRide = () => {
                     </div>
                 </Form>
             </div>
-            <div className="col-8">
+            <div className="col-12 col-md-8">
                 {(showDirection || showMarker)
                     &&
                     <Maps

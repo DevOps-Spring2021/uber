@@ -72,7 +72,15 @@
     transform: translate(-50%, -50%);
   }
 }
+.ride-mobile{
+  overflow: hidden;
+}
 
+@media screen and (max-width:600px) {
+  .ride-mobile{
+    overflow: auto;
+  }
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -100,4 +108,13 @@
 .dropdown-menu {
   width: 100%;
   z-index: 2;
+}
+.ml-logout{
+  margin-left: auto;
+}
+
+@media screen and (max-width: 992px) {
+  .ml-logout{
+    margin-left: 0;
+  }
 }
