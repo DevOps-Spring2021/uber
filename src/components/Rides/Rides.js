@@ -31,20 +31,22 @@ const Rides = () => {
         });
     }
     return (
-        <Table striped bordered hover className="mt-5">
-            <thead>
-                <tr>
-                    <th>Pick up</th>
-                    <th>Destination</th>
-                    <th>Booking Date</th>
-                    <th>Ride Date</th>
-                    <th>Ride Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                {renderHTML()}
-            </tbody>
-        </Table>
+        <div className="w-100 ride-mobile">
+            <Table striped bordered hover className="mt-5">
+                <thead>
+                    <tr>
+                        <th>Pick up</th>
+                        <th>Destination</th>
+                        <th>Booking Date</th>
+                        <th>Ride Date</th>
+                        <th>Ride Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {renderHTML()}
+                </tbody>
+            </Table>
+        </div>
     )
 }
 

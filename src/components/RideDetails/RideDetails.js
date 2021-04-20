@@ -11,7 +11,6 @@ const RideDetails = (props) => {
     const [rideData, setRideData] = useState(null);
     const [showDirection, setShowDirection] = useState(null);
     const [feedback, setFeedback] = useState('');
-    const [reload, setReload] = useState(false);
     const getLatLng = async (id) => {
         let url = `${process.env.REACT_APP_BACKEND_HOST}/maps/place_id/${id}`;
         let resp = await axios.get(url, {
@@ -32,7 +31,7 @@ const RideDetails = (props) => {
             .catch(err => alert("error while cancelling the ride"));
     }
     const feedbackRide = () => {
-        if (!feedback && feedback == "") {
+        if (!feedback && feedback === "") {
             alert("Please enter valid feedback");
         }
         axios.post(`${process.env.REACT_APP_BACKEND_HOST}/rides/feedback/${props.match.params.id}`,
@@ -57,20 +56,21 @@ const RideDetails = (props) => {
                 .then(res => { setRideData(res.data) })
                 .catch(err => alert("error while booking ride"));
         }
-        , [])
+        , [props.match.params.id])
     useEffect(
-        async () => {
+        async function getCords() {
+
             if (rideData != null) {
                 let srcCoords = await getLatLng(rideData.pickupPlaceId);
                 let dstCoords = await getLatLng(rideData.destinationPlaceId);
                 setShowDirection({ src: srcCoords, dst: dstCoords });
             }
         }
-        , rideData)
+        , [rideData])
     return (
         rideData ?
             <div className="row mt-5">
-                <div className="col-4">
+                <div className="col-12 col-md-4 mb-3">
                     <h3>
                         Ride Details:
                     </h3>
@@ -92,6 +92,10 @@ const RideDetails = (props) => {
                                 <td>Ride Date:</td>
                                 <td>{rideData.rideDate.split("T")[0]}</td>
                             </tr>
+                            <tr>
+                                <td>Price:</td>
+                                <td>${rideData.cost}</td>
+                            </tr>
                         </tbody>
                     </Table>
                     {rideData.cancel ?
@@ -106,7 +110,7 @@ const RideDetails = (props) => {
                         : <></>}
                     {!rideData.cancel && ((new Date(rideData.rideDate)).getTime()) < (new Date()).getTime() ?
                         <div>
-                            {!rideData.feedback || rideData.feedback == "" ?
+                            {!rideData.feedback || rideData.feedback === "" ?
                                 <div>
                                     <Form.Group controlId="exampleForm.ControlTextarea1">
                                         <Form.Label>Feedback</Form.Label>
@@ -123,7 +127,7 @@ const RideDetails = (props) => {
                         </div>
                         : <></>}
                 </div>
-                <div className="col-8">
+                <div className="col-12 col-md-8">
                     <Maps
                         googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2HFlhQEag0ziQjl7LULqobeCEmInPAX0&v=3.exp&libraries=geometry,drawing,places,directions"
                         loadingElement={<div style={{ height: `100%` }} />}

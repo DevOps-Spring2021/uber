@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useContext } from 'react';
-import { Navbar, Nav, Button } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -25,9 +25,9 @@ const UberNavbar = () => {
                 <Nav className="d-flex w-100" activeKey={current} onSelect={(e) => { setCurrent(e.eventKey) }}>
                     <Nav.Link as={Link} eventKey="Book Ride" to="/" className="btn">Home</Nav.Link>
                     <Nav.Link as={Link} eventKey="rides" to="/rides" className="btn">Rides</Nav.Link>
-                    <Nav.Link as={Link} eventKey="buses" to="/buses" className="btn">Admin</Nav.Link>
+                    {/* <Nav.Link as={Link} eventKey="buses" to="/buses" className="btn">Admin</Nav.Link> */}
+                    <Nav.Link as={Link} onClick={logout} className="btn ml-logout active">Logout</Nav.Link>
                 </Nav>
-                <Button onClick={logout} className="btn-light ml-auto">Logout</Button>
             </Navbar.Collapse>
         </Navbar>
     );
