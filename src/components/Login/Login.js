@@ -28,6 +28,7 @@ const Login = () => {
         setValidated(false);
     }
     const handleSubmit = (event) => {
+        console.log(process.env.REACT_APP_BACKEND_HOST);
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();

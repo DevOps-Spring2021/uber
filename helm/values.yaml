@@ -25,7 +25,7 @@ deployment:
   maxUnavailable: 0
 
 backend:
-  url: http://a84bd4b357a644b69b4f0577fccc1588-962901573.us-east-1.elb.amazonaws.com:8080
+  url:
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
