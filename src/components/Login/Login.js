@@ -48,7 +48,8 @@ const Login = () => {
                     .catch((err) => {
                         setValidated(false);
                         console.log("Error while creating user")
-                        err.response.data ? setErrorMessage(err.response.data) : setErrorMessage("error while creating user");
+                        console.log(err);
+                        // err.response.data ? setErrorMessage(err.response.data) : setErrorMessage("error while creating user");
                         setShowError(true);
                     });
             }

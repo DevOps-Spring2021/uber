@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: nareshagrawal/uberfrontend:latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 serviceAccount:
   # Specifies whether a service account should be created
