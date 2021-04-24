@@ -2,7 +2,7 @@ replicaCount: 3
 
 image:
   repository: nareshagrawal/uberfrontend:latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -40,9 +40,9 @@ resources:
     memory: 128Mi
 
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 3
   maxReplicas: 6
-  targetCPUUtilizationPercentage: 80
+  targetCPUUtilizationPercentage: 60
   # targetMemoryUtilizationPercentage: 80
 

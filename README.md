@@ -4,16 +4,34 @@
 Creating frontend react stack for Uber APP
 
 ### Maintainer 
-Name: Naresh Agrawal, NUID: 001054600<br/>
-Name: Akshay Babaji Phapale, NUID: 001316563
+<table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>NUID</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Akshay Babaji Phapale</td>
+            <td>001316563</td>
+        </tr>
+        <tr>
+            <td>Naresh Agrawal</td>
+            <td>001054600</td>
+        </tr>
+    </tbody>
+</table>
 
 ## Technology Stack
 * React
+* Helm
 
 ## Prerequisites
 * React
 * npm
 * Docker
+* Helm
 
 ## Running application locally
 ```
@@ -36,3 +54,17 @@ $ docker run --rm -p 3000:80 <image-name>
 ```
 The application should be running and listening for HTTP requests on port 3000 on localhost.
 http://localhost:3000/
+
+## Deploy application on Kubernetes Cluster
+```
+$ helm install frontend ./helm/ --set backend.url=<backend.url:port>
+```
+
+## Uninstall application on Kubernetes Cluster
+```
+$ helm delete frontend
+```
+
+### Test health end point
+`<application-ip:3000>/testHealth`
+`<application-ip:3000>/testComms`
