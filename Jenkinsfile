@@ -28,6 +28,16 @@ pipeline {
             }
         }
 
+        stage('Azure Cluster Info') {
+            steps{
+                script {
+                    withKubeConfig([credentialsId: 'azureCred']) {
+                        sh "kubectl cluster-info"
+                    }
+                }
+            }
+        }
+
         stage('AWS Cluster Info, Backend Service url') {
             steps{
                 script {
@@ -35,17 +45,6 @@ pipeline {
                         sh "kubectl cluster-info"
                         backendIp = sh(returnStdout: true, script: "kubectl describe services backend | grep elb.amazonaws.com | grep LoadBalancer | awk '{print \$3}' | tr -d '\n'")
                         echo "${backendIp}"
-                    }
-                }
-            }
-        }
-
-        stage('Azure Cluster Info') {
-            steps{
-                script {
-                    sh "sleep 50"
-                    withKubeConfig([credentialsId: 'azureCred']) {
-                        sh "kubectl cluster-info"
                     }
                 }
             }
