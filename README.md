@@ -57,7 +57,7 @@ http://localhost:3000/
 
 ## Deploy application on Kubernetes Cluster
 ```
-$ helm install frontend ./helm/ --set backend.url=<backend.url:port>
+$ helm install frontend ./helm/ --set backend.url=<BackendURL:port>
 ```
 
 ## Uninstall application on Kubernetes Cluster
@@ -65,6 +65,6 @@ $ helm install frontend ./helm/ --set backend.url=<backend.url:port>
 $ helm delete frontend
 ```
 
-### Test health end point
-`<application-ip:3000>/testHealth`
+### Test health end points
+`<application-ip:3000>/testHealth`<br/>
 `<application-ip:3000>/testComms`
