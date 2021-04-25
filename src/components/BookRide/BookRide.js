@@ -5,6 +5,9 @@ import Maps from "../Maps/Maps";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBus, faDollarSign, faPlus, faMinus, faCalendar, faUsers, faCircle } from '@fortawesome/fontawesome-free-solid';
+
 const BookRide = () => {
     const history = useHistory();
     const [source, setSource] = useState('');
@@ -33,7 +36,7 @@ const BookRide = () => {
                 Authorization: `Bearer ${Cookies.get("jwt")}`
             },
         })
-            .then(res => { console.log("Ride booked Successfully.");  history.push(`/rides/${res.data.rideID}`) })
+            .then(res => { console.log("Ride booked Successfully."); history.push(`/rides/${res.data.rideID}`) })
             .catch(err => alert("error while booking ride"));
     }
 
@@ -78,7 +81,7 @@ const BookRide = () => {
             })
             .catch(err => alert("error while booking ride"));
     }
-    useEffect(()=>{
+    useEffect(() => {
         getPrice();
         getBusList();
     }, [source, destination, seats]);
@@ -94,7 +97,7 @@ const BookRide = () => {
     const sourceChange = async (data) => {
         setSource(data);
         updateMap("src", data);
-        
+
     }
     const destinationChange = (data) => {
         setDestination(data);
@@ -148,42 +151,121 @@ const BookRide = () => {
                 <Form onSubmit={handleSubmit} className="w-100">
                     <h3>Hi, {userDisplay}</h3>
                     <h5>Please book your ride</h5>
-                    <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
-                    <AutoComplete label="Enter destination" onSelect={destinationChange}></AutoComplete>
-                    <Form.Group>
-                        <Form.Control
-                            type="date"
-                            value={rideDate}
-                            min={`${(new Date()).getFullYear()}-0${(new Date()).getMonth()+1}-${(new Date()).getDate()}`}
-                            onChange={(e) => { setRideDate(e.target.value) }}
-                        />
+                    <div className="row">
+                        <div className="col-2 pr-0">
+                            <div className="py-2">
+                                <div className="verticalLine"></div>
+                                <FontAwesomeIcon icon={faCircle}></FontAwesomeIcon>
+                            </div>
+
+                        </div>
+                        <div className="col-10 pl-0">
+                            <div className="p-0">
+                                <AutoComplete label="Enter pickup location" onSelect={sourceChange}></AutoComplete>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-2 pr-0">
+                            <div className="py-2">
+                                <FontAwesomeIcon icon={faCircle}></FontAwesomeIcon>
+                            </div>
+
+                        </div>
+                        <div className="col-10 pl-0">
+                            <div className="p-0">
+                                <AutoComplete label="Enter destination" onSelect={destinationChange}></AutoComplete>
+                            </div>
+                        </div>
+                    </div>
+                    <Form.Group className="m-0">
+                        <div className="row">
+                            <div className="col-2 pr-0">
+                                <div className="px-1 py-3">
+                                    <FontAwesomeIcon icon={faCalendar}></FontAwesomeIcon>
+                                </div>
+
+                            </div>
+                            <div className="col-10 pl-0">
+                                <div className="py-2">
+                                    <Form.Control
+                                        type="date"
+                                        value={rideDate}
+                                        min={`${(new Date()).getFullYear()}-0${(new Date()).getMonth() + 1}-${(new Date()).getDate()}`}
+                                        onChange={(e) => { setRideDate(e.target.value) }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Form.Group>
+                    <Form.Group className="mb-2">
+                        <div className="row">
+                            <div className="col-2 pr-0">
+                                <div className="py-3">
+                                    <FontAwesomeIcon icon={faUsers}></FontAwesomeIcon>
+                                </div>
+
+                            </div>
+                            <div className="col-10 pl-0">
+                                <div className="py-2">
+                                    <div className="row">
+                                        <div className="col-3 pr-0">
+                                            <div className="p-2 bg-info text-white text-center rounded"
+                                                onClick={() => { if (seats != 1) { setSeats(seats - 1) } }}
+                                            >
+                                                <FontAwesomeIcon className="fa-lg" icon={faMinus}></FontAwesomeIcon>
+                                            </div>
+                                        </div>
+                                        <div className="col-6 pl-0 pr-0 text-center">
+                                            <div className="bg-light p-2">
+                                                <strong>{seats}</strong>
+                                            </div>
+                                        </div>
+                                        <div className="col-3 pl-0">
+                                            <div className="p-2 bg-info text-white text-center rounded"
+                                                onClick={() => { setSeats(seats + 1) }}
+                                            >
+                                                <FontAwesomeIcon className="fa-lg" icon={faPlus}></FontAwesomeIcon>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </Form.Group>
                     <Form.Group>
-                        <Form.Control
-                            type="number"
-                            value={seats}
-                            min="1"
-                            onChange={(e) => { setSeats(e.target.value)}}
-                            placeholder="Number of seats"
-                            required />
-                    </Form.Group>
-                    <Form.Group>
-                        <label>Price: </label>
-                        <b>${price}</b>
+                        <div className="row">
+                            <div className="col-2 pr-0">
+                                <div className="p-2">
+                                    <FontAwesomeIcon  icon={faDollarSign}></FontAwesomeIcon>
+                                </div>
+
+                            </div>
+                            <div className="col-10 pl-0">
+                                <div className="text-success bg-light rounded p-2 border border-secondary">
+                                    <strong>{price}</strong>
+                                </div>
+                            </div>
+                        </div>
                     </Form.Group>
                     {lstBus.length > 0 && (
-                        <DropdownButton
-                            className="my-comment-dropdown w-100"
-                            size="sm"
-                            variant="secondary"
-                            title="Select Bus">
-                            {
-                                getBusDD()
-                            }
-                        </DropdownButton>
+                        <>
+                            <div className="text-center bg-light p-2 mb-3">
+                                <FontAwesomeIcon className="fa-lg" icon={faBus}></FontAwesomeIcon>
+                            </div>
+                            <DropdownButton
+                                className="my-comment-dropdown w-100"
+                                size="sm"
+                                variant="secondary"
+                                title="Select Bus">
+                                {
+                                    getBusDD()
+                                }
+                            </DropdownButton>
+                        </>
                     )}
                     {lstBus.length <= 0 && (
-                        <p>No bus available</p>
+                        <div className="text-center bg-danger p-2 text-white rounded">No bus available</div>
                     )}
                     <div className="mt-2">
                         <Button type="submit" disabled={lstBus.length > 0 ? false : true} className="bg-dark w-100">Book Ride</Button>

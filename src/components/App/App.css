@@ -118,3 +118,16 @@
     margin-left: 0;
   }
 }
+
+.verticalLine {
+  border-left: solid #000000;
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  height: 100%;
+}
+
+.navbar-text{
+  font-size:small;
+  padding: 0px;
+}
