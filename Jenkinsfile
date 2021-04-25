@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('Cluster Info') {
+        stage('AWS Cluster Info') {
             steps{
                 script {
                     withKubeConfig([credentialsId: 'kubernetesCred']) {
@@ -38,11 +38,31 @@ pipeline {
             }
         }
 
-        stage('Helm upgrade') {
+        stage('Azure Cluster Info') {
+            steps{
+                script {
+                    withKubeConfig([credentialsId: 'azureCred']) {
+                        sh "kubectl cluster-info"
+                    }
+                }
+            }
+        }
+
+        stage('Backend Service url') {
             steps{
                 script {
                     withKubeConfig([credentialsId: 'kubernetesCred']) {
                         backendIp = sh(returnStdout: true, script: "kubectl describe services backend | grep elb.amazonaws.com | grep LoadBalancer | awk '{print \$3}' | tr -d '\n'")
+                        echo "${backendIp}"
+                    }
+                }
+            }
+        }
+
+        stage('Helm upgrade') {
+            steps{
+                script {
+                    withKubeConfig([credentialsId: 'azureCred']) {
                         echo "${backendIp}"
                         sh "helm upgrade frontend ./helm/ --set backend.url='http://${backendIp}:8080'"
                     }
