@@ -28,17 +28,6 @@ pipeline {
             }
         }
 
-        stage('Azure Cluster Info') {
-            steps{
-                script {
-                    sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
-                    withKubeConfig([credentialsId: 'azureCred']) {
-                        sh "kubectl cluster-info"
-                    }
-                }
-            }
-        }
-
         stage('AWS Cluster Info, Backend Service url') {
             steps{
                 script {
@@ -51,18 +40,17 @@ pipeline {
             }
         }
 
-        stage('Helm upgrade') {
+        stage('Azure Cluster Info') {
             steps{
                 script {
-                    withKubeConfig([credentialsId: 'azureCred']) {
-                        echo "${backendIp}"
-                        sh "helm upgrade frontend ./helm/ --set backend.url='http://${backendIp}:8080'"
-                    }
+                    sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
+                    sh "az aks show --resource-group ${resourceGroupName}  --name ${clusterName}  --query fqdn"
+                    sh "az aks get-credentials --resource-group ${resourceGroupName}  --name ${clusterName} --overwrite-existing"
+                    echo "${backendIp}"
+                    sh "helm upgrade frontend ./helm/ --set backend.url='http://${backendIp}:8080'"
                 }
             }
         }
-
-
         
     }
 }
